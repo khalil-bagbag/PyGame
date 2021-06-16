@@ -1,14 +1,8 @@
 import pandas as pd
 
 data=pd.read_csv('pygame.stats.csv')
-print(data.columns)
-
-def read_csv(path):
-    data=pd.read_csv(path)
-    return data
 
 
-data=read_csv('pygame.stats.csv')
 
 def calculatescore(connections):
     succ=0
@@ -26,8 +20,8 @@ def score_jour(score):
     return jour 
 
 def remise(jour):
-    print(45-jour)
-    return 45-jour
+    print(45-jour*1.5)
+    return 45-jour*1.5
 
 def gagnant(data):
     identifiant,montant_init=0,45
@@ -37,18 +31,26 @@ def gagnant(data):
         score=calculatescore(joined)
         jours=score_jour(score)
         montant_calcul=remise(jours)
-        print(k,score,jours,montant_calcul)
+        #print(k,score,jours,montant_calcul)
         
         
         if (montant_calcul<=montant_init):
             identifiant=k
             montant_init=montant_calcul
-            liste.append(k)
-    print('Liste des gagants:')
-    for x in liste:
-        print('Name: ', data.iloc[x]['name'],',Username :',data.iloc[x]['username'])
-    
-    return liste
+            liste.append([k,montant_calcul])
+        liste=sorted(liste,key=lambda liste:liste[1])
+        c=1
+        best=liste[0][1]
+    for i in range(1,len(liste)):
+        if best==liste[i][1]:
+            c+=1
+        else:
+            break
+    liste=liste[:c]
+    for i in liste:
+        print('Name :', data.iloc[i[0]]['name'],' Username : ',data.iloc[i[0]]['username'])
+    return liste 
+
 
 liste=gagnant(data)
 
